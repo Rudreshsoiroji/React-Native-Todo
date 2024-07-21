@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
 
@@ -10,11 +10,13 @@ export default function App() {
 
   function textInputHandler(enteredText){
     setTextInput(enteredText);
+
   } 
 
   function appTodoHandler(){
-   setTodoList(pev => [...pev, textInput]);
-
+    if (textInput.length <= 0) return
+   setTodoList(pev => [...pev, {text: textInput, id: Math.random().toString()}]);
+  
   }
 
   return (
@@ -25,9 +27,24 @@ export default function App() {
         <Button color={'#3740FE'} title='Add todo' onPress={appTodoHandler}/>
        </View>
 
-      <View style={styles.todoContainer}>
-        {todoList.map((todo) => <Text key={todo} >{todo}</Text>)}
-      </View>
+<View style={styles.todoContainer}>
+      <FlatList data={todoList} renderItem={ (itemData) => {
+        return  ( 
+        <View style={styles.individualTodo}> 
+        <Text style={{color: '#ffffff'}} >{itemData.item.text}</Text>
+         </View>)
+
+      }}
+      keyExtractor={(item, index) => item.id}
+      / >
+        
+          
+  
+     
+
+       
+      
+</View>
      
     </View>
   );
@@ -59,6 +76,17 @@ const styles = StyleSheet.create({
   },
   todoContainer:{
     flex: 9,
+  },
+  individualTodo:{
+    padding: 10,
+    marginTop: 10,
+    borderColor: '#cccccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#5308cc',
+    fontSize: 16,
+    color: '#ffffff'
+
   }
  
 });
